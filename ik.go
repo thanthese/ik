@@ -80,18 +80,17 @@ func (w *world) render(s tcell.Screen) {
 	s.Show()
 }
 
-func (w *world) moveEntityBy(e entity, v vector) error {
+func (w *world) moveEntityTo(e entity, p point) error {
 	a := e.At()
-	b := e.At().add(v)
-	if !w.inBounds(b) {
+	if !w.inBounds(p) {
 		return errors.New("movement out of bounds")
 	}
-	if _, ok := w.board[b.x][b.y].(*Ground); !ok {
+	if _, ok := w.board[p.x][p.y].(*Ground); !ok {
 		return errors.New("can only move onto empty ground")
 	}
 	w.board[a.x][a.y] = NewGround(point{a.x, a.y})
-	w.board[b.x][b.y] = e
-	e.MoveTo(b)
+	w.board[p.x][p.y] = e
+	e.MoveTo(p)
 	return nil
 }
 
@@ -155,7 +154,7 @@ func main() {
 				case 'n', 'N':
 					v = lowerRight
 				}
-				w.moveEntityBy(w.player, v)
+				w.moveEntityTo(w.player, w.player.At().add(v))
 				w.render(s)
 			}
 		}
