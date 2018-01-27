@@ -17,6 +17,13 @@ var (
 	sixDirs    = []vector{upperLeft, upperRight, right, left, lowerLeft, lowerRight}
 )
 
+type polarity int
+
+const (
+	black polarity = iota
+	white
+)
+
 type entity interface {
 	At() point
 	MoveTo(point)
@@ -83,8 +90,8 @@ func main() {
 					v = lowerRight
 				}
 				w.moveEntityTo(w.player, w.player.At().add(v))
-				w.render(s)
 				w.moveEnemies()
+				w.render(s)
 			}
 		}
 	}

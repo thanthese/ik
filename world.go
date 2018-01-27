@@ -7,9 +7,10 @@ import (
 )
 
 type world struct {
-	maxPt  point
-	board  [][]entity
-	player *Player
+	maxPt   point
+	board   [][]entity
+	player  *Player
+	enemies []entity
 }
 
 func newWorld(maxPt point) *world {
@@ -29,12 +30,16 @@ func newWorld(maxPt point) *world {
 	for _, p := range w.inBoundsNeighbors(point{7, 7}) {
 		w.addEntity(NewWall(p))
 	}
+	w.addEntity(NewEnemy(point{4, 4}, white))
 	return w
 }
 
 func (w *world) addEntity(e entity) {
 	if p, ok := e.(*Player); ok {
 		w.player = p
+	}
+	if _, ok := e.(*enemy); ok {
+		w.enemies = append(w.enemies, e)
 	}
 	w.board[e.At().x][e.At().y] = e
 }
@@ -82,5 +87,8 @@ func (w *world) inBoundsNeighbors(p point) []point {
 }
 
 func (w *world) moveEnemies() {
-
+	for _, e := range w.enemies {
+		v := upperRight
+		w.moveEntityTo(e, e.At().add(v))
+	}
 }
