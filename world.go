@@ -10,7 +10,7 @@ type world struct {
 	maxPt   point
 	board   [][]entity
 	player  *Player
-	enemies []entity
+	enemies []*enemy
 }
 
 func newWorld(maxPt point) *world {
@@ -38,8 +38,8 @@ func (w *world) addEntity(e entity) {
 	if p, ok := e.(*Player); ok {
 		w.player = p
 	}
-	if _, ok := e.(*enemy); ok {
-		w.enemies = append(w.enemies, e)
+	if b, ok := e.(*enemy); ok {
+		w.enemies = append(w.enemies, b)
 	}
 	w.board[e.At().x][e.At().y] = e
 }
