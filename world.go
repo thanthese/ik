@@ -11,6 +11,7 @@ type world struct {
 	board   [][]entity
 	player  *Player
 	enemies []*enemy
+	scent   map[point]int
 }
 
 func newWorld(maxPt point) *world {
@@ -24,13 +25,14 @@ func newWorld(maxPt point) *world {
 		}
 	}
 	w.addEntity(NewPlayer(point{0, 0}))
-	for _, p := range w.inBoundsNeighbors(point{3, 3}) {
-		w.addEntity(NewWall(p))
+	for i, m := 2, 8; i < m; i++ {
+		w.addEntity(NewWall(point{i, m - i}))
 	}
-	for _, p := range w.inBoundsNeighbors(point{7, 7}) {
-		w.addEntity(NewWall(p))
+	for i, m := 1, 15; i < m; i++ {
+		w.addEntity(NewWall(point{i, m - i}))
 	}
-	w.addEntity(NewEnemy(point{4, 4}, white))
+	w.addEntity(NewEnemy(point{15, 15}, white))
+	w.addEntity(NewEnemy(point{10, 10}, white))
 	return w
 }
 
@@ -88,7 +90,28 @@ func (w *world) inBoundsNeighbors(p point) []point {
 
 func (w *world) moveEnemies() {
 	for _, e := range w.enemies {
-		v := upperRight
-		w.moveEntityTo(e, e.At().add(v))
+		p, err := e.Move(w)
+		if err == nil {
+			w.moveEntityTo(e, p)
+		}
+	}
+}
+
+func (w *world) buildScent() {
+	w.scent = map[point]int{w.player.At(): 0}
+	for q, c := []point{w.player.At()}, 1; len(q) > 0; c++ {
+		r := []point{}
+		for _, p := range q {
+			for _, n := range w.inBoundsNeighbors(p) {
+				switch w.board[n.x][n.y].(type) {
+				case *Ground, *enemy:
+					if _, ok := w.scent[n]; !ok {
+						w.scent[n] = c
+						r = append(r, n)
+					}
+				}
+			}
+		}
+		q = r
 	}
 }

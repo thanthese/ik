@@ -14,7 +14,9 @@ var (
 	left       = vector{-1, 0}
 	lowerLeft  = vector{0, -1}
 	lowerRight = vector{1, -1}
-	sixDirs    = []vector{upperLeft, upperRight, right, left, lowerLeft, lowerRight}
+
+	// notice clockwise order
+	sixDirs = []vector{upperLeft, upperRight, right, lowerRight, lowerLeft, left}
 )
 
 type polarity int
@@ -61,6 +63,7 @@ func main() {
 	s := newScreen()
 	defer s.Fini()
 	w := newWorld(point{15, 15})
+	w.buildScent() // remove
 	w.render(s)
 
 	for {
@@ -74,7 +77,7 @@ func main() {
 			case tcell.KeyRune:
 				var v vector
 				switch ev.Rune() {
-				case 'q', 'Q':
+				case 'q', 'Q', ' ':
 					return
 				case 'h', 'H':
 					v = left
@@ -90,6 +93,7 @@ func main() {
 					v = lowerRight
 				}
 				w.moveEntityTo(w.player, w.player.At().add(v))
+				w.buildScent()
 				w.moveEnemies()
 				w.render(s)
 			}
