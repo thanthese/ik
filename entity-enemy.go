@@ -15,7 +15,9 @@ func NewEnemy(pt point, p polarity) *enemy {
 	g := &enemy{}
 	g.point = pt
 	g.symbol = 'e'
-	g.style = tcell.StyleDefault
+	g.style = tcell.StyleDefault.
+		Background(base03).
+		Foreground(red)
 	g.polarity = p
 	return g
 }

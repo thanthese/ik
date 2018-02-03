@@ -53,8 +53,8 @@ func newScreen() tcell.Screen {
 		os.Exit(1)
 	}
 	s.SetStyle(tcell.StyleDefault.
-		Foreground(tcell.ColorWhite).
-		Background(tcell.ColorBlack))
+		Foreground(base0).
+		Background(base03))
 	s.Clear()
 	return s
 }
