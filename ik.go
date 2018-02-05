@@ -5,41 +5,41 @@ import (
 	"os"
 
 	"github.com/gdamore/tcell"
+	"github.com/thanthese/ik/color"
 )
 
 var (
-	upperLeft  = vector{-1, 1}
-	upperRight = vector{0, 1}
-	right      = vector{1, 0}
-	left       = vector{-1, 0}
-	lowerLeft  = vector{0, -1}
-	lowerRight = vector{1, -1}
+	UpperLeft  = Vector{-1, 1}
+	UpperRight = Vector{0, 1}
+	Right      = Vector{1, 0}
+	Left       = Vector{-1, 0}
+	LowerLeft  = Vector{0, -1}
+	LowerRight = Vector{1, -1}
 
 	// notice clockwise order
-	sixDirs = []vector{upperLeft, upperRight, right, lowerRight, lowerLeft, left}
+	SixDirs = []Vector{UpperLeft, UpperRight, Right, LowerRight, LowerLeft, Left}
 )
 
-type polarity int
+type Polarity bool
 
 const (
-	black polarity = iota
-	white
+	Black Polarity = true
+	White Polarity = false
 )
 
-type entity interface {
-	At() point
-	MoveTo(point)
-	Glyph() rune
-	Style() tcell.Style
+type Point struct{ X, Y int }
+type Vector struct{ Xdiff, Ydiff int }
+
+func (p Point) add(v Vector) Point {
+	return Point{
+		X: p.X + v.Xdiff,
+		Y: p.Y + v.Ydiff}
 }
 
-type point struct{ x, y int }
-type vector struct{ xdiff, ydiff int }
-
-func (p point) add(v vector) point {
-	return point{
-		x: p.x + v.xdiff,
-		y: p.y + v.ydiff}
+type Entity interface {
+	At() Point
+	GetPolarity() Polarity
+	MoveTo(Point)
 }
 
 func newScreen() tcell.Screen {
@@ -53,8 +53,8 @@ func newScreen() tcell.Screen {
 		os.Exit(1)
 	}
 	s.SetStyle(tcell.StyleDefault.
-		Foreground(base0).
-		Background(base03))
+		Foreground(color.White).
+		Background(color.Background))
 	s.Clear()
 	return s
 }
@@ -62,9 +62,9 @@ func newScreen() tcell.Screen {
 func main() {
 	s := newScreen()
 	defer s.Fini()
-	w := newWorld(point{15, 15})
-	w.buildScent() // remove
-	w.render(s)
+	w := NewWorld()
+	w.BuildScent() // remove
+	w.Render(s)
 
 	for {
 		switch ev := s.PollEvent().(type) {
@@ -75,27 +75,27 @@ func main() {
 			case tcell.KeyEscape, tcell.KeyCtrlC:
 				return
 			case tcell.KeyRune:
-				var v vector
+				var v Vector
 				switch ev.Rune() {
 				case 'q', 'Q', ' ':
 					return
 				case 'h', 'H':
-					v = left
+					v = Left
 				case 'l', 'L':
-					v = right
+					v = Right
 				case 'y', 'Y':
-					v = upperLeft
+					v = UpperLeft
 				case 'u', 'U':
-					v = upperRight
+					v = UpperRight
 				case 'b', 'B':
-					v = lowerLeft
+					v = LowerLeft
 				case 'n', 'N':
-					v = lowerRight
+					v = LowerRight
 				}
-				w.moveEntityTo(w.player, w.player.At().add(v))
-				w.buildScent()
-				w.moveEnemies()
-				w.render(s)
+				w.MoveEntityTo(w.Player, w.Player.At().add(v))
+				w.BuildScent()
+				w.MoveEnemies()
+				w.Render(s)
 			}
 		}
 	}
