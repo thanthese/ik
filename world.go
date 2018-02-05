@@ -30,13 +30,16 @@ func NewWorld() *World {
 	for i, m := 2, 8; i < m; i++ {
 		delete(w.Board, Point{i, m - i})
 	}
-	w.Player = &Player{
+	p := &Player{
 		Point:    Point{0, 0},
 		Polarity: White}
-	w.Enemies = append(w.Enemies,
-		&Enemy{
-			Point:    Point{5, 5},
-			Polarity: Black})
+	w.Player = p
+	w.Board[p.At()] = p
+	e := &Enemy{
+		Point:    Point{5, 5},
+		Polarity: Black}
+	w.Enemies = append(w.Enemies, e)
+	w.Board[e.At()] = e
 	return w
 }
 
