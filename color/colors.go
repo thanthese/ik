@@ -26,9 +26,9 @@ var (
 
 	// our usage
 
-	Background = Base0
-	White      = Base3
-	Black      = Base02
+	Background = Base00
+	Black      = Base03
+	White      = Base2
 
 	WhiteStyle = tcell.StyleDefault.
 			Foreground(White).

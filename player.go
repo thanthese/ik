@@ -5,6 +5,11 @@ type Player struct {
 	Polarity
 }
 
-func (p *Player) At() Point             { return p.Point }
-func (p *Player) GetPolarity() Polarity { return p.Polarity }
-func (p *Player) MoveTo(pt Point)       { p.Point = pt }
+func (p *Player) Move(w *World, v Vector) (worked bool) {
+	b := p.add(v)
+	if !w.Exists(b) {
+		return false
+	}
+	p.Point = b
+	return true
+}

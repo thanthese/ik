@@ -1,27 +1,22 @@
 package main
 
-import (
-	"errors"
-)
-
 type Enemy struct {
-	Point
 	Polarity Polarity
 }
 
-func (e *Enemy) At() Point             { return e.Point }
-func (e *Enemy) GetPolarity() Polarity { return e.Polarity }
-func (p *Enemy) MoveTo(pt Point)       { p.Point = pt }
+func MoveEnemies(w *World) {
+	// 	w.Scent = map[Point]int{w.Player.At(): 0}
+	// 	for q, c := []Point{w.Player.At()}, 1; len(q) > 0; c++ {
+	// 		r := []Point{}
+	// 		for _, p := range q {
+	// 			for _, n := range w.ExistingNeighbors(p) {
+	// 				if _, ok := w.Scent[n]; !ok {
+	// 					w.Scent[n] = c
+	// 					r = append(r, n)
+	// 				}
+	// 			}
+	// 		}
+	// 		q = r
+	// 	}
 
-func (e *Enemy) Move(w *World) (Point, error) {
-	min := e.Point
-	for _, n := range w.ExistingNeighbors(e.Point) {
-		if w.Scent[n] < w.Scent[min] {
-			min = n
-		}
-	}
-	if min == e.Point {
-		return e.Point, errors.New("no place/reason for enemy to move")
-	}
-	return min, nil
 }
