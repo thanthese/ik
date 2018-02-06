@@ -1,16 +1,11 @@
 package main
 
 type World struct {
-
-	// not existant entry: cannot pass there
-	// nil entry: empty, passable ground
-	// entity there: entity over passable ground
-	Board map[Point]*Enemy
-
+	Board  map[Point]*Enemy
 	Player *Player
 }
 
-func NewWorld() *World {
+func NewLvl1() *World {
 	w := &World{}
 	w.Board = make(map[Point]*Enemy)
 	for x := 0; x < 10; x++ {
@@ -22,6 +17,9 @@ func NewWorld() *World {
 		delete(w.Board, Point{i, m - i})
 	}
 	w.Board[Point{5, 5}] = &Enemy{Polarity: Black}
+	w.Player = &Player{
+		Point:    Point{0, 0},
+		Polarity: White}
 	return w
 }
 
@@ -30,10 +28,18 @@ func (w *World) Exists(p Point) bool {
 	return ok
 }
 
+func (w *World) IsEmpty(p Point) bool {
+	return w.Exists(p) && w.Board[p] == nil
+}
+
+func (w *World) HasEnemy(p Point) bool {
+	return w.Exists(p) && w.Board[p] != nil
+}
+
 func (w *World) ExistingNeighbors(p Point) []Point {
 	ps := []Point{}
 	for _, v := range SixDirs {
-		n := p.add(v)
+		n := p.Add(v)
 		if w.Exists(n) {
 			ps = append(ps, n)
 		}

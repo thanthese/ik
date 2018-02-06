@@ -9,7 +9,7 @@ const (
 
 type Point struct{ X, Y int }
 
-func (p Point) add(v Vector) Point {
+func (p Point) Add(v Vector) Point {
 	return Point{
 		X: p.X + v.Xdiff,
 		Y: p.Y + v.Ydiff}
@@ -32,13 +32,7 @@ var (
 func main() {
 	ui := NewUI(10, 10)
 	defer ui.Fini()
-	w := NewWorld()
-	p := &Player{
-		Point:    Point{0, 0},
-		Polarity: White}
-	w.Player = p
-	w.Board[p.Point] = nil
-	ui.Write(w)
+	w := NewLvl1()
 
 	for {
 		ui.Write(w)
@@ -46,7 +40,9 @@ func main() {
 		if quit {
 			return
 		}
-		p.Move(w, v)
+		if !w.Player.Move(w, v) {
+			continue
+		}
 		MoveEnemies(w)
 	}
 }

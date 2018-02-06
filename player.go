@@ -6,8 +6,8 @@ type Player struct {
 }
 
 func (p *Player) Move(w *World, v Vector) (worked bool) {
-	b := p.add(v)
-	if !w.Exists(b) {
+	b := p.Add(v)
+	if !w.IsEmpty(b) {
 		return false
 	}
 	p.Point = b
