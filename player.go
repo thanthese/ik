@@ -16,11 +16,9 @@ func (p *Player) Move(w *World, v Vector) (worked bool) {
 
 	for _, n1 := range w.ExistingNeighbors(from) {
 		for _, n2 := range w.ExistingNeighbors(to) {
-			if n1 == n2 {
-				if w.HasEnemy(n1) {
-					w.Board[n1] = nil
-					p.Kills++
-				}
+			if n1 == n2 && w.HasEnemy(n1) {
+				w.Board[n1] = nil
+				p.Kills++
 			}
 		}
 	}
