@@ -44,5 +44,8 @@ func main() {
 			continue
 		}
 		MoveEnemies(w)
+		if w.HasEnemy(w.Player.Point) {
+			return // death comes for you
+		}
 	}
 }

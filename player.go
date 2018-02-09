@@ -6,10 +6,10 @@ type Player struct {
 }
 
 func (p *Player) Move(w *World, v Vector) (worked bool) {
-	b := p.Add(v)
-	if !w.IsEmpty(b) {
+	to := p.Add(v)
+	if !w.IsEmpty(to) {
 		return false
 	}
-	p.Point = b
+	p.Point = to
 	return true
 }
