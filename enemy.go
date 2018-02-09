@@ -7,14 +7,14 @@ type Enemy struct {
 func MoveEnemies(w *World) {
 	scent := buildScent(w)
 
-	eps := []Point{}
+	es := []Point{}
 	for p := range w.Board {
 		if w.HasEnemy(p) {
-			eps = append(eps, p)
+			es = append(es, p)
 		}
 	}
 
-	for _, e := range eps {
+	for _, e := range es {
 		min := e
 		for _, n := range w.ExistingNeighbors(e) {
 			if w.IsEmpty(n) && scent[n] < scent[min] {
