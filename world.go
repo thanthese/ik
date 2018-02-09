@@ -17,6 +17,7 @@ func NewLvl1() *World {
 		delete(w.Board, Point{i, m - i})
 	}
 	w.Board[Point{5, 5}] = &Enemy{Polarity: Black}
+	w.Board[Point{6, 6}] = &Enemy{Polarity: Black}
 	w.Player = &Player{
 		Point:    Point{0, 0},
 		Polarity: White}

@@ -14,6 +14,10 @@ func MoveEnemies(w *World) {
 		}
 	}
 
+	if len(es) == 0 {
+		addEnemy(w)
+	}
+
 	for _, e := range es {
 		min := e
 		for _, n := range w.ExistingNeighbors(e) {
@@ -25,6 +29,12 @@ func MoveEnemies(w *World) {
 			w.Board[min], w.Board[e] = w.Board[e], w.Board[min]
 		}
 	}
+}
+
+func addEnemy(w *World) {
+	w.Board[Point{0, 0}] = &Enemy{Polarity: Black}
+	w.Board[Point{9, 0}] = &Enemy{Polarity: Black}
+	w.Board[Point{0, 9}] = &Enemy{Polarity: Black}
 }
 
 func buildScent(w *World) map[Point]int {
