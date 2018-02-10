@@ -33,7 +33,7 @@ func NewUI(width, height int) *UI {
 func (ui *UI) Write(w *World) {
 	ui.Clear()
 	for p, e := range w.Board {
-		cx := p.X*4 + p.Y*2
+		cx := p.X*2 + p.Y
 		cy := ui.viewHeight - p.Y
 		if p == w.Player.Point {
 			ui.SetContent(cx, cy, '@', nil, getStyle(w.Player.Polarity))
